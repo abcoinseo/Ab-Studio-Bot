@@ -6,540 +6,483 @@
     <title>AB Studio AI Chat</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
-      body {
-            font-family: sans-serif;
-          margin: 0;
-           padding: 0;
-         background-color: #1a1a1a;
-          color: white;
-        display: flex;
-        flex-direction: column;
-           height: 100vh;
+         body {
+             font-family: sans-serif;
+              margin: 0;
+              padding: 0;
+            background-color: #1a1a1a;
+              color: white;
+            display: flex;
+              flex-direction: column;
+            height: 100vh;
        }
      .chat-header {
            background-color: #222;
-            color: white;
-           padding: 15px;
-           text-align: center;
-           font-size: 1.5em;
-        position: fixed;
+          color: white;
+          padding: 15px;
+             text-align: center;
+             font-size: 1.5em;
+           position: fixed;
            top: 0;
-         left: 0;
-           width: 100%;
+           left: 0;
+            width: 100%;
          z-index: 100;
-       box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-          display: flex;
-        align-items: center;
-        justify-content: space-between;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            display: flex;
+          align-items: center;
+          justify-content: space-between;
+      }
+         .chat-header img {
+          width: 40px;
+             height: 40px;
+           border-radius: 50%;
+              margin-right: 8px;
+     }
+       .menu-button {
+         padding: 5px 10px;
+         cursor: pointer;
     }
-     .chat-header img {
-        width: 40px;
-           height: 40px;
-            border-radius: 50%;
-            margin-right: 8px;
+        .history-menu {
+           position: fixed;
+          top: 60px;
+            right: 0;
+           width: 300px;
+             height: calc(100vh - 60px);
+         background-color: #333;
+          border-left: 1px solid #444;
+           box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
+             z-index: 101;
+          overflow-y: auto;
+           padding: 10px;
+       }
+    .menu-header {
+          padding: 10px;
+          display: flex;
+         align-items: center;
+         justify-content: space-between;
+         border-bottom: 1px solid #444;
+      }
+   .menu-header span {
+        cursor: pointer;
+      }
+     .history-items {
+        padding: 10px;
         }
-   .menu-button {
-       padding: 5px 10px;
+     .history-item {
+      border: 1px solid #444;
+         padding: 10px;
+          margin-bottom: 10px;
+        border-radius: 4px;
            cursor: pointer;
       }
-      .history-menu {
-           position: fixed;
-              top: 60px;
-              right: 0;
-           width: 300px;
-        height: calc(100vh - 60px);
-           background-color: #333;
-        border-left: 1px solid #444;
-        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
-             z-index: 101;
-             overflow-y: auto;
-          padding: 10px;
+     .history-item:hover {
+      background-color: #444;
       }
-     .menu-header {
-         padding: 10px;
+        .chat-container {
+            flex: 1;
          display: flex;
-            align-items: center;
-          justify-content: space-between;
-           border-bottom: 1px solid #444;
-       }
-        .menu-header span {
-          cursor: pointer;
-        }
-        .history-items {
-         padding: 10px;
-        }
-       .history-item {
-          border: 1px solid #444;
-            padding: 10px;
-            margin-bottom: 10px;
-         border-radius: 4px;
-         cursor: pointer;
-       }
-       .history-item:hover {
-          background-color: #444;
-         }
-         .chat-container {
-         flex: 1;
-           display: flex;
           flex-direction: column;
-          overflow: hidden;
-           margin-top: 60px;
-      }
+            overflow: hidden;
+        margin-top: 60px;
+     }
        .chat-body {
-           flex: 1;
+            flex: 1;
           padding: 15px;
           overflow-y: auto;
-          display: flex;
-           flex-direction: column;
-        }
-        .message {
-          margin-bottom: 8px;
-          padding: 8px;
-          border-radius: 8px;
-            max-width: 70%;
-           word-wrap: break-word;
-             white-space: pre-line;
-              display: flex;
-              align-items: center;
-             position: relative;
-             animation: slideIn 0.3s ease-out;
+            display: flex;
+         flex-direction: column;
      }
-       .message .copy-button,
-      .message .speak-button {
-        position: absolute;
-          top: 0px;
-            right: 0px;
-        padding: 5px;
-         cursor: pointer;
+    .message {
+         margin-bottom: 8px;
+       padding: 8px;
+       border-radius: 8px;
+         max-width: 70%;
+        word-wrap: break-word;
+          white-space: pre-line;
+          display: flex;
+            align-items: center;
+         position: relative;
+           animation: slideIn 0.3s ease-out;
+     }
+    .message .copy-button,
+    .message .speak-button {
+       position: absolute;
+        top: 0px;
+       right: 0px;
+       padding: 5px;
+       cursor: pointer;
           opacity: 0.5;
          transition: opacity 0.2s ease;
-         display: none;
+          display: none;
      }
-     .message:hover .copy-button,
-    .message:hover .speak-button {
-         opacity: 1;
-        display: block;
+   .message:hover .copy-button,
+   .message:hover .speak-button {
+      opacity: 1;
+      display: block;
+      }
+   .message .copy-button:hover,
+  .message .speak-button:hover {
+       opacity: 1;
+         background-color: #555;
+  }
+  .user-message {
+      background-color: #333;
+        color: white;
+      align-self: flex-end;
+        border-radius: 8px 0 8px 8px;
      }
-        .message .copy-button:hover,
-     .message .speak-button:hover {
-           opacity: 1;
-            background-color: #555;
-     }
-       .user-message {
-       background-color: #333;
-       color: white;
-       align-self: flex-end;
-          border-radius: 8px 0 8px 8px;
-    }
-       .bot-message {
-            background-color: #444;
-             color: white;
+        .bot-message {
+          background-color: #444;
+            color: white;
         align-self: flex-start;
        border-radius: 0 8px 8px 8px;
         }
-        .chat-input {
-            padding: 10px;
-            display: flex;
-            border-top: 1px solid #333;
-             align-items: center;
-        }
-    .chat-input input {
-         flex: 1;
-           padding: 8px;
-        border: 1px solid #555;
-            border-radius: 4px;
-          background-color: #333;
-          color: white;
-    }
-    .chat-input button {
-          background-color: transparent;
-        border: none;
-        cursor: pointer;
-        display: flex;
+      .chat-input {
+           padding: 10px;
+         display: flex;
+        border-top: 1px solid #333;
          align-items: center;
-           margin-left: 5px;
-           color: white;
+     }
+     .chat-input input {
+          flex: 1;
+            padding: 8px;
+            border: 1px solid #555;
+            border-radius: 4px;
+        background-color: #333;
+            color: white;
+       }
+    .chat-input button {
+        background-color: transparent;
+        border: none;
+          cursor: pointer;
+           display: flex;
+          align-items: center;
+          margin-left: 5px;
+         color: white;
     }
-       .chat-input button:hover {
-         opacity: 0.8;
-        }
-       ::-webkit-scrollbar {
+      .chat-input button:hover {
+        opacity: 0.8;
+    }
+        ::-webkit-scrollbar {
             width: 8px;
+     }
+     ::-webkit-scrollbar-thumb {
+       background-color: #666;
+         border-radius: 4px;
         }
-       ::-webkit-scrollbar-thumb {
-         background-color: #666;
-        border-radius: 4px;
-      }
-      ::-webkit-scrollbar-track {
-       background-color: #222;
-    }
+       ::-webkit-scrollbar-track {
+        background-color: #222;
+        }
         .typing-indicator {
          display: inline-flex;
-         margin-bottom: 10px;
-           align-self: flex-start;
-      }
-     .typing-indicator span {
-           width: 8px;
-             height: 8px;
+       margin-bottom: 10px;
+          align-self: flex-start;
+     }
+       .typing-indicator span {
+         width: 8px;
+          height: 8px;
             border-radius: 50%;
-           background-color: #888;
-           margin-right: 3px;
+          background-color: #888;
+            margin-right: 3px;
          animation: typing 1.4s infinite;
-      }
-      .typing-indicator span:nth-child(2) {
-        animation-delay: 0.2s;
-     }
-       .typing-indicator span:nth-child(3) {
-          animation-delay: 0.4s;
-         }
-       @keyframes typing {
-       0% {
-            transform: translateY(0);
-            opacity: 0.4;
-         }
-        50% {
-        transform: translateY(-4px);
-            opacity: 1;
-           }
-         100% {
-            transform: translateY(0);
-              opacity: 0.4;
-            }
-      }
-       @keyframes slideIn {
-           from {
-              opacity: 0;
-                transform: translateY(10px);
-            }
-           to {
-               opacity: 1;
-                 transform: translateY(0);
-           }
     }
-    .message img{
-          max-width: 200px;
-             max-height: 150px;
-             border-radius: 5px;
+   .typing-indicator span:nth-child(2) {
+         animation-delay: 0.2s;
       }
-        .chat-input .voice-button {
-           background-color: transparent;
-          border: none;
-         cursor: pointer;
-         display: flex;
-            align-items: center;
-          margin-right: 5px;
-          color: white;
+    .typing-indicator span:nth-child(3) {
+       animation-delay: 0.4s;
+      }
+     @keyframes typing {
+         0% {
+          transform: translateY(0);
+           opacity: 0.4;
+           }
+          50% {
+            transform: translateY(-4px);
+             opacity: 1;
+          }
+      100% {
+         transform: translateY(0);
+             opacity: 0.4;
+       }
+    }
+     @keyframes slideIn {
+        from {
+           opacity: 0;
+           transform: translateY(10px);
+        }
+       to {
+          opacity: 1;
+        transform: translateY(0);
      }
-        .chat-input .voice-button:hover{
-           opacity: 0.8;
-     }
+ }
+        .message img{
+           max-width: 200px;
+            max-height: 150px;
+           border-radius: 5px;
+      }
 </style>
 </head>
 <body>
     <header class="chat-header">
-      <img src="https://cache.tonapi.io/imgproxy/iNMnoEReCDR47JfMedDWbTI9SN0M-9qd_tigLlDiMS0/rs:fill:200:200:1/g:no/aHR0cHM6Ly9pbWcuY29sbGVjdGlmeS5hcHAvamV0dG9uX3NwbC90b3oyeDlkbmZIYUc3c3pFamh5WlJzcWZVSkREUlVwZlhoVllxNEdRLnBuZw.webp" alt="AB Studio Logo" />
-       AB Studio AI
-          <div class="menu-button">
-             <span class="material-icons">more_vert</span>
-           </div>
-    </header>
-    <div class="history-menu" id="history-menu" style="display:none;">
-      <div class="menu-header">
-          Conversation History <span class="material-icons" id="close-menu">close</span>
+     <img src="https://cache.tonapi.io/imgproxy/iNMnoEReCDR47JfMedDWbTI9SN0M-9qd_tigLlDiMS0/rs:fill:200:200:1/g:no/aHR0cHM6Ly9pbWcuY29sbGVjdGlmeS5hcHAvamV0dG9uX3NwbC90b3oyeDlkbmZIYUc3c3pFamh5WlJzcWZVSkREUlVwZlhoVllxNEdRLnBuZw.webp" alt="AB Studio Logo"/>
+    AB Studio AI
+         <div class="menu-button">
+            <span class="material-icons">more_vert</span>
         </div>
-    <div class="history-items" id="history-items"></div>
+ </header>
+   <div class="history-menu" id="history-menu" style="display:none;">
+       <div class="menu-header">
+         Conversation History <span class="material-icons" id="close-menu">close</span>
     </div>
-  <div class="chat-container">
-    <div class="chat-body" id="chat-body"></div>
-    <div class="chat-input">
-          <input type="text" id="user-input" placeholder="Type your message..." autocomplete="off">
+    <div class="history-items" id="history-items"></div>
+   </div>
+   <div class="chat-container">
+     <div class="chat-body" id="chat-body"></div>
+   <div class="chat-input">
+         <input type="text" id="user-input" placeholder="Type your message..." autocomplete="off">
         <button id="send-button">
-               <span class="material-icons">send</span>
-        </button>
-     </div>
-  </div>
-    <audio id="audio" style="display: none;"></audio>
-  <script type="module">
-       import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-     import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-database.js";
-       const GEMINI_API_KEY = "AIzaSyDQExNMk1SXtQ4FtV-UcT2laMz2cn9UTQ4";
-      const firebaseConfig = {
-          apiKey: "AIzaSyBW1WPXUN8DYhT6npZQYoQ3l4J-jFSbzfg",
-          authDomain: "ab-studio-marketcap.firebaseapp.com",
-          databaseURL: "https://ab-studio-marketcap-default-rtdb.firebaseio.com",
-         projectId: "ab-studio-marketcap",
-        storageBucket: "ab-studio-marketcap.firebasestorage.app",
-          messagingSenderId: "115268088088",
-         appId: "1:115268088088:web:65643a047f92bfaa66ee6d"
-     };
-     const app = initializeApp(firebaseConfig);
-     const database= getDatabase(app);
-    const chatBody = document.getElementById('chat-body');
-      const userInput = document.getElementById('user-input');
-    const sendButton = document.getElementById('send-button');
-     const historyMenu= document.getElementById('history-menu');
-       const historyItems = document.getElementById('history-items');
-        const menuButton = document.querySelector('.menu-button');
-      const closeMenuButton = document.getElementById('close-menu');
-   let typingIndicator = null;
-     let allConversations= localStorage.getItem('allConversations') ? JSON.parse(localStorage.getItem('allConversations')) : [];
-    let currentConversation= [];
-        const audioPlayer= document.getElementById('audio')
-    const audioUrls=[];
-     let isPlaying=false;
-        const dbRef=ref(database,'chatbotResponses');
-        let chatbotResponses ={};
-        onValue(dbRef, (snapshot) =>{
-          chatbotResponses = snapshot.val();
-         });
-    loadAudioUrls();
-      loadCurrentConversation();
-        function loadAudioUrls() {
-           for(let i = 1 ; i <= 1; i++){
-             audioUrls.push(`${i}.mp3`);
-            }
-         }
-        function loadCurrentConversation() {
-            chatBody.innerHTML = '';
-            currentConversation.forEach(msg => sendMessage(msg.text, msg.isUser, false));
-         }
-      function saveCurrentConversation() {
-         if(currentConversation.length > 0){
-            const newConvId=Date.now();
-          allConversations.push({id : newConvId , messages:[...currentConversation]});
-             localStorage.setItem('allConversations',JSON.stringify(allConversations));
-           currentConversation= [];
-             loadCurrentConversation();
-          }
-    }
-      function showTypingIndicator() {
-           typingIndicator=document.createElement('div');
-          typingIndicator.classList.add('typing-indicator')
-         typingIndicator.innerHTML='<span></span><span></span><span></span>';
-          chatBody.appendChild(typingIndicator);
-          chatBody.scrollTop= chatBody.scrollHeight
-     }
-        function hideTypingIndicator() {
-           if (typingIndicator) {
-             typingIndicator.remove();
-               typingIndicator = null
-            }
-     }
-     function sendMessage(message,isUser,shouldSave= true) {
-          const messageElement = document.createElement('div')
-           messageElement.classList.add('message');
-            if(isUser) {
-                 messageElement.classList.add('user-message') ;
-          }    else {
-                messageElement.classList.add('bot-message');
-          }
-     if(message.startsWith("https://") || message.startsWith("http://") &&
-              (message.endsWith(".jpg") ||
-               message.endsWith(".png") ||
-             message.endsWith(".jpeg")||
-             message.endsWith(".gif"))
-      ) {
-              messageElement.innerHTML = `
-                   <img src="${message}"/>
-                    <span class="material-icons copy-button">content_copy</span>
-                 <span class="material-icons speak-button">volume_up</span>
-                  ` ;
-       }   else {
-          messageElement.innerHTML = `
-                  <span>${message}</span>
-                 <span class="material-icons copy-button">content_copy</span>
-                  <span class="material-icons speak-button">volume_up</span>
-            `;
-          }
-    const copyButton= messageElement.querySelector('.copy-button');
-      copyButton.addEventListener('click',()=> copyMessage(message))
-      const speakButton = messageElement.querySelector('.speak-button')
-      speakButton.addEventListener('click',() => speakMessage(message))
-       chatBody.appendChild(messageElement);
-       chatBody.scrollTop=chatBody.scrollHeight
-      if(shouldSave) {
-             currentConversation.push({
-                 text: message,
-                  isUser:isUser,
-                });
-            }
-       }
-        function copyMessage(text) {
-            navigator.clipboard.writeText(text)
-               .then(()=> console.log("Text Copied:  ", text ))
-            .catch(error=> console.error("problem to copy : ", error ));
-        }
-        function speakMessage(text){
-          const utterance= new SpeechSynthesisUtterance(text);
-          speechSynthesis.speak(utterance)
-       }
-         async function getGeminiResponse(message){
-            try {
-            const response = await fetch(
-                 `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`,
-                  {
-                   method: "POST",
-                   headers: {
-                      "Content-Type": "application/json",
-                      },
-                    body: JSON.stringify({
-                         contents: [{
-                            parts:[{
-                                  text: message
-                                 }]
-                             }]
-                       }),
-                     }
-               )
-           const data=await response.json();
-          if(data.candidates && data.candidates[0].content && data.candidates[0].content.parts){
-                return data.candidates[0].content.parts[0].text
-            }
-            return "I'm sorry, I don't understand that.";
-       }   catch (error){
-              console.error("There is problem in the gemini fetch API details: " +  error ) ;
-               return "I'm having trouble getting a response right now.";
-             }
-        }
-         async function getBotResponse(message){
-              const lowercaseMessage= message.toLowerCase().trim() ;
-              if(chatbotResponses && chatbotResponses[lowercaseMessage]){
-                  return chatbotResponses[lowercaseMessage];
-            } else {
-              return await getGeminiResponse(message);
-         }
-     }
-      sendButton.addEventListener('click', async() =>{
-        const message = userInput.value.trim()
-          if(message) {
-              if (message==='/play') {
-                    playRandomSong();
-                     sendMessage('Playing Music' , false);
-              }   else if (message ==='/stop'){
-                      stopMusic()
-                    sendMessage('Stopped music',false);
-                 }
-               else {
-                sendMessage(message ,true)
-                    userInput.value = "";
-                showTypingIndicator();
-                  const botResponse=await getBotResponse(message)
-                 hideTypingIndicator()
-                 setTimeout(() =>{
-                  sendMessage(botResponse ,false) ;
-               }, 500)
-         }
-     }
-  })
-     userInput.addEventListener('keydown',(event)=> {
-           if(event.key ==='Enter') {
-               sendButton.click()
-            event.preventDefault();
-           }
-       });
-      menuButton.addEventListener('click',()=>{
-        historyMenu.style.display= historyMenu.style.display==='block' ? 'none' :'block';
-        displayConversationHistory();
-     });
-    closeMenuButton.addEventListener('click',()=>{
-         historyMenu.style.display='none';
-      });
-        function displayConversationHistory(){
-            historyItems.innerHTML= '';
-           allConversations.forEach((conversation,index)=>{
-                const itemDiv= document.createElement('div');
-               itemDiv.classList.add('history-item');
-                 itemDiv.innerHTML=`Conversation ${index+1}`;
-                itemDiv.addEventListener('click', () => loadSpecificConversation(conversation.id) ) ;
-             historyItems.appendChild(itemDiv);
-           });
-     }
-       function loadSpecificConversation(conversationId){
-         chatBody.innerHTML = "";
-           const selectedConversation =allConversations.find(conv => conv.id===conversationId) ;
-             if(selectedConversation) {
-                 currentConversation = [...selectedConversation.messages]
-            loadCurrentConversation();
-           }
-          historyMenu.style.display='none';
-      }
-      function playRandomSong() {
-            if (!isPlaying) {
-                const randomIndex = Math.floor(Math.random() * audioUrls.length);
-             const audioUrl=audioUrls[randomIndex];
-               audioPlayer.src = audioUrl ;
-                 audioPlayer.play().catch(error=>{ // using this catch and try because user may trigger events from text when voice is on but code state transition may also conflict on some browsers,
-                     sendMessage("Could not Play the track " + error ,false ) ; // proper error tracking to prevent UI freeze is done with custom feedback messaging that can notify on failure in loading resources and will not break program flow or functionality even if source can't load
-                    console.log( "Audio was unable to load at url"+audioUrl  , " and full error context or code detail :", error); // debugging also present for developers and will capture which component has those particular error and log state using web browser built tools.
-
-                         return
-                   });
-                    isPlaying=true;
-                    audioPlayer.loop= true ;
-             }  else{
-                 console.log(" Already playing!");
-         }
-       }
-    function stopMusic(){
-          if(isPlaying){
-           audioPlayer.pause();
-           audioPlayer.currentTime= 0;
-          isPlaying= false;
-            } else{
-            console.log("No audio track were started or initiated");
-          }
-      }
-       window.addEventListener('beforeunload', saveCurrentConversation);
-       let recognition = null; // these variable declarations in current project were in previous section so I am declaring for complete implementation purpose.
-    let recordingState =false ;// using bool value so no value from past code or data corruption would be active here due to missing data types declaration for specific value types as JS language needs clear value definitions when assigning a variable.
-          if ('webkitSpeechRecognition' in window) {
-              recognition = new webkitSpeechRecognition();
-              recognition.continuous = true ;
-            recognition.lang= 'en-US'; // default browser implementation
-         recognition.onstart= ()=>{
-         recordingState= true // used to check state
-            sendMessage('Started recording ...Please wait..', false ) ; // specific status to notify users ( also prevent some system bugs on load) of web api event handling during mic start process.
-             userInput.value= "" // clear other text from input during state process in other methods of event calling, and text boxes..
-
-          };
-         recognition.onend= ()=>{ // state based check for valid state. so system properly process before stopping any unwanted actions that may arise from browsers implementations and OS environment on running system, and also send API. or DOM update.
-         if(recordingState) {
-          recordingState=false; // set to initial after completing to enable or disable that in browser.
-
-           sendButton.click(); // send to message by click simulation, but API is only started upon mousedown on the HTML send buttons so to fully ensure the right type of operation can execute from users interaction point and as best consistent implementation and coding.
-                }
+          <span class="material-icons">send</span>
+      </button>
+       </div>
+   </div>
+   <audio id="audio" style="display: none;"></audio>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-database.js";
+         const GEMINI_API_KEY = "AIzaSyDQExNMk1SXtQ4FtV-UcT2laMz2cn9UTQ4";
+          const firebaseConfig = {
+            apiKey: "AIzaSyBW1WPXUN8DYhT6npZQYoQ3l4J-jFSbzfg",
+              authDomain: "ab-studio-marketcap.firebaseapp.com",
+            databaseURL: "https://ab-studio-marketcap-default-rtdb.firebaseio.com",
+           projectId: "ab-studio-marketcap",
+             storageBucket: "ab-studio-marketcap.firebasestorage.app",
+           messagingSenderId: "115268088088",
+           appId: "1:115268088088:web:65643a047f92bfaa66ee6d"
          };
-         recognition.onresult= (event) => {
-           let interimTranscript="" // Local to track only valid result types ( avoid global variable for complex application logic in longer runs).
-            for(let i=event.resultIndex; i< event.results.length; i++){
-                  interimTranscript += event.results[i][0].transcript+ "";// append text to total if chunk of record by microphone api for local users
-                 }
-        userInput.value = interimTranscript.trim()
-     };
-         recognition.onerror=(event)=>{
-              sendMessage(' Mic did not fully start properly please test with correct device, settings, and Browser API implementation state '+event.error, false);  // proper browser/system message, if mic is blocked or system does not allow speech to text implementation on browser to be active ( also debug ) and inform users .
-           recordingState=false
-             console.error("Recording API for Voice problem  : please check, also log details in browser "  , event);
-          };
-    }
-      sendButton.addEventListener('mousedown', ()=>{  // start speech recording on click down hold and complete process after finger removal with specific long event from send to use the UI with mic support if such browser/os configuration exist , during use. if API was successful it's triggered only using one single HTML button from same input tag component on UI in UI logic level.
-
-    if (recognition) {
-          if(!recordingState){ // using check variable as specific event handle type state management pattern to be used when using DOM or other web APIs based browser UI in large system codebases
-
-            userInput.value = ""  // to clean on user trigger. and only record after button event . no type state mixing is active for consistent processing on operations for local development setup ( these needs to be removed for a server to take care using APIs instead in future if it needs a user side settings ).
-              recognition.start();
-              }    else { // stop if on , and clear variables or release browser API to other task or resource pool for the event action ( stop operation only will occur after mouse button released so the state also remains correct and controlled via bool flag).
-
-                recordingState= false; // stop recording with change of status from start to stop for that mic api session call or click action state.
-
-                   recognition.stop()
-
+           const app = initializeApp(firebaseConfig);
+        const database= getDatabase(app);
+    const chatBody = document.getElementById('chat-body');
+     const userInput = document.getElementById('user-input');
+     const sendButton = document.getElementById('send-button');
+      const historyMenu= document.getElementById('history-menu');
+    const historyItems = document.getElementById('history-items');
+    const menuButton=document.querySelector('.menu-button')
+        const closeMenuButton= document.getElementById('close-menu');
+       let typingIndicator = null;
+    let allConversations= localStorage.getItem('allConversations')? JSON.parse(localStorage.getItem('allConversations')):[];
+    let currentConversation = []
+      const audioPlayer = document.getElementById('audio')
+      const audioUrls = []
+        let isPlaying = false;
+     const dbRef = ref(database,'chatbotResponses');
+        let chatbotResponses ={};
+        onValue(dbRef,(snapshot)=> {
+          chatbotResponses = snapshot.val();
+        })
+        loadAudioUrls();
+        loadCurrentConversation()
+        function loadAudioUrls() {
+            for(let i = 1; i <= 1; i++){
+              audioUrls.push(`${i}.mp3`);
+           }
+       }
+    function loadCurrentConversation(){
+          chatBody.innerHTML= '';
+           currentConversation.forEach(msg=> sendMessage(msg.text , msg.isUser, false))
+       }
+       function saveCurrentConversation() {
+       if(currentConversation.length>0){
+         const newConvId=Date.now();
+          allConversations.push({ id: newConvId, messages: [...currentConversation]})
+          localStorage.setItem('allConversations',JSON.stringify(allConversations))
+          currentConversation=[];
+          loadCurrentConversation();
         }
-      }    else{ // messaging from the system in UI and informing on state to debug browser side API errors in real project where those may arise due to other setup related problems or browser system bugs which might come and requires custom logic on more structured testing scenarios of production deployment to catch any user or API edge case type of scenario from UI point of use (not browser setting related errors).
-               sendMessage('Unable to access system Mic, for record audio message to transcript ! - Check Browser access or try another device',false);
+   }
+       function showTypingIndicator() {
+        typingIndicator=document.createElement('div');
+         typingIndicator.classList.add('typing-indicator');
+           typingIndicator.innerHTML= '<span></span><span></span><span></span>'
+          chatBody.appendChild(typingIndicator) ;
+       chatBody.scrollTop = chatBody.scrollHeight ;
+       }
+        function hideTypingIndicator() {
+            if (typingIndicator) {
+             typingIndicator.remove()
+            typingIndicator= null
+       }
+    }
+       function sendMessage(message, isUser,shouldSave=true) {
+         const messageElement=document.createElement('div');
+        messageElement.classList.add('message')
+         if (isUser) {
+            messageElement.classList.add('user-message')
+          } else {
+              messageElement.classList.add('bot-message');
+      }
+       if (message.startsWith("https://") || message.startsWith("http://") &&
+               (message.endsWith(".jpg") ||
+              message.endsWith(".png") ||
+                message.endsWith(".jpeg") ||
+              message.endsWith(".gif"))
+       ) {
+           messageElement.innerHTML=`
+             <img src="${message}"/>
+            <span class="material-icons copy-button">content_copy</span>
+              <span class="material-icons speak-button">volume_up</span>
+          `;
+         }  else {
+            messageElement.innerHTML= `
+               <span>${message}</span>
+             <span class="material-icons copy-button">content_copy</span>
+               <span class="material-icons speak-button">volume_up</span>
+              `;
+        }
+        const copyButton= messageElement.querySelector('.copy-button');
+           copyButton.addEventListener('click',()=> copyMessage(message))
+           const speakButton= messageElement.querySelector('.speak-button')
+         speakButton.addEventListener('click',()=> speakMessage(message));
+          chatBody.appendChild(messageElement);
+         chatBody.scrollTop = chatBody.scrollHeight;
+      if(shouldSave) {
+           currentConversation.push({
+            text: message,
+              isUser: isUser
+             });
+           }
+     }
+       function copyMessage(text) {
+         navigator.clipboard.writeText(text)
+            .then(()=> console.log("Text copy action worked perfectly! ", text ))
+          .catch(error => console.error("Error Message from system " ,error))
+      }
+        function speakMessage(text) {
+            const utterance =new SpeechSynthesisUtterance(text);
+           speechSynthesis.speak(utterance) ;
+     }
+        async function getGeminiResponse(message) {
+            try {
+               const response = await fetch(
+               `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`,
+                 {
+                     method:"POST",
+                  headers: {
+                       "Content-Type":"application/json",
+                       },
+                    body:JSON.stringify({
+                         contents:[{
+                          parts: [{
+                              text: message
+                             }]
+                        }]
+                     }),
+                    }
+                 )
+                const data=await response.json();
+             if (data.candidates && data.candidates[0].content && data.candidates[0].content.parts) {
+                  return data.candidates[0].content.parts[0].text;
+           }
+              return "I'm sorry, I don't understand that.";
+        }  catch(error) {
+               console.error("There were API problems, detail info below"  ,  error);
+            return "I'm having trouble getting a response right now.";
+          }
+        }
+   async function getBotResponse(message) {
+         const lowercaseMessage=message.toLowerCase().trim();
+         if(chatbotResponses && chatbotResponses[lowercaseMessage]) {
+             return chatbotResponses[lowercaseMessage];
+           }  else{
+             return  await getGeminiResponse(message);
+           }
+     }
+    sendButton.addEventListener('click', async () =>{
+          const message = userInput.value.trim();
+        if (message) {
+            if (message === '/play'){
+                 playRandomSong() ;
+                  sendMessage('Playing Music', false ) ;
+             }    else if(message === '/stop') {
+                    stopMusic();
+                sendMessage('Stopped Music', false )
+          }  else{
+              sendMessage(message, true) ;
+                userInput.value = ""
+                showTypingIndicator() ;
+                  const botResponse = await getBotResponse(message);
+                   hideTypingIndicator();
+                    setTimeout(() =>{
+                         sendMessage(botResponse ,false);
+                     } , 500 );
+                 }
+          } else{
+           playRandomSong()  ; // New Logic implementation  from user defined requirement change . that was requested ! ( it ignores if any user string in those actions for UI operations). and start playback from here instead from UI using microphone feature. This code also has safety catch , so will not load again when a play track function already running based on a local control system
+         }
+    });
+       userInput.addEventListener('keydown', (event)=> {
+             if(event.key ==='Enter'){
+                   sendButton.click();
+                event.preventDefault();
             }
+        });
+     menuButton.addEventListener('click', ()=>{
+           historyMenu.style.display = historyMenu.style.display ==='block' ? 'none' : 'block' ;
+          displayConversationHistory() ;
+    })
+    closeMenuButton.addEventListener('click',()=> {
+      historyMenu.style.display='none';
        });
+    function displayConversationHistory() {
+         historyItems.innerHTML='';
+        allConversations.forEach((conversation , index)=> {
+              const itemDiv= document.createElement('div');
+           itemDiv.classList.add('history-item');
+               itemDiv.innerHTML=`Conversation ${index+1}`;
+              itemDiv.addEventListener('click',() => loadSpecificConversation(conversation.id))
+           historyItems.appendChild(itemDiv);
+        });
+     }
+   function loadSpecificConversation(conversationId) {
+       chatBody.innerHTML='';
+       const selectedConversation=allConversations.find(conv=> conv.id=== conversationId) ;
+       if(selectedConversation){
+         currentConversation= [...selectedConversation.messages] ;
+             loadCurrentConversation() ;
+       }
+         historyMenu.style.display='none'
+   }
+   function playRandomSong(){
+      if (!isPlaying){
+        const randomIndex = Math.floor(Math.random()*audioUrls.length);
+         const audioUrl=audioUrls[randomIndex]; // create new source URL only for specific time on random basis. so they load better. for new track selections.
+          audioPlayer.src= audioUrl; // DOM element implementation here for local / test cases
+           audioPlayer.play()
+        .catch(error => {  // local debug error messages for system for user. ( if problems by different web browser configuration setting this implementation is required ) .
+
+            sendMessage("could not start music in browser API call "+ error, false);
+          console.log(' Audio tag did not properly process from given source - check for configurations if required :'+ audioUrl + ', full error message for test: ' + error);
+             return
+            } )
+        isPlaying=true ;
+            audioPlayer.loop= true ;// track looping enabled during playbacks. by single browser UI DOM methods here for local implementations using js files.
+
+     }else {
+        console.log('Current State, ignores or stops any other requests with browser audio api calls ') ;// only one track by a browser instance will play , at any point of this app code usage in real local implementation..
+        }
+       }
+        function stopMusic() {
+         if(isPlaying) {
+           audioPlayer.pause();
+           audioPlayer.currentTime=0;
+             isPlaying=false; // set bool as false for safe execution on browser APIs by single access or process state transitions
+
+           } else{
+                console.log('Not doing anything audio stream is already not active for the Stop implementation calls from user state.')
+             }
+       }
+         window.addEventListener('beforeunload',saveCurrentConversation);
+            // Mic implementation removed - for user text , copy or for load image types using source text types only now during these modifications
  </script>
 </body>
 </html>
